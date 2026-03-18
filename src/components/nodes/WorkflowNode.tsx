@@ -1,6 +1,6 @@
 import { memo, useCallback } from 'react'
 import { Handle, Position, type NodeProps } from '@xyflow/react'
-import { WorkflowNodeData } from '../../types'
+import type { WorkflowNode as WorkflowGraphNode } from '../../types'
 import { KIND_COLORS } from '../../utils/nodeTemplates'
 import { useWorkflowStore } from '../../store/workflowStore'
 
@@ -18,8 +18,8 @@ const icons: Record<string, string> = {
   output: '◎',
 }
 
-function WorkflowNode({ id, data, selected }: NodeProps) {
-  const nodeData = data as WorkflowNodeData
+function WorkflowNode({ id, data, selected }: NodeProps<WorkflowGraphNode>) {
+  const nodeData = data
   const selectNode = useWorkflowStore((s) => s.selectNode)
   const color = KIND_COLORS[nodeData.kind]
 
@@ -43,7 +43,6 @@ function WorkflowNode({ id, data, selected }: NodeProps) {
         background: kindBg[nodeData.kind],
         borderColor: selected ? color : 'rgba(255,255,255,0.08)',
         boxShadow: selected ? `0 0 0 1px ${color}22, 0 8px 32px ${color}18` : '0 4px 16px rgba(0,0,0,0.4)',
-        ringColor: color,
       }}
     >
       {/* Top handle */}

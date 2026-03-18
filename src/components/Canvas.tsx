@@ -6,11 +6,10 @@ import {
   MiniMap,
   Panel,
   BackgroundVariant,
-  type Node,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { useWorkflowStore } from "../store/workflowStore";
-import { WorkflowNodeData, NodeTemplate } from "../types";
+import type { NodeTemplate, WorkflowNode as WorkflowGraphNode } from "../types";
 import { KIND_COLORS } from "../utils/nodeTemplates";
 import WorkflowNode from "./nodes/WorkflowNode";
 
@@ -41,7 +40,7 @@ export default function Canvas() {
         y: e.clientY - bounds.top - 40,
       };
 
-      const newNode: Node<WorkflowNodeData> = {
+      const newNode: WorkflowGraphNode = {
         id: getId(),
         type: "workflowNode",
         position,
@@ -64,7 +63,7 @@ export default function Canvas() {
 
   return (
     <div ref={reactFlowWrapper} className="flex-1 h-full">
-      <ReactFlow
+      <ReactFlow<WorkflowGraphNode>
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
@@ -117,8 +116,8 @@ export default function Canvas() {
             borderRadius: 10,
           }}
           nodeColor={(n) => {
-            const d = n.data as WorkflowNodeData;
-            return KIND_COLORS[d?.kind] ?? "#3a3a4a";
+            const kind = n.data.kind
+            return typeof kind === "string" ? KIND_COLORS[kind] ?? "#3a3a4a" : "#3a3a4a"
           }}
           maskColor="rgba(10,10,15,0.8)"
         />

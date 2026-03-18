@@ -1,3 +1,5 @@
+import type { Edge, Node } from '@xyflow/react'
+
 export type NodeKind = 'trigger' | 'action' | 'condition' | 'output'
 
 export interface NodeConfig {
@@ -14,13 +16,16 @@ export interface WorkflowNodeData {
   isRunning?: boolean
   isCompleted?: boolean
   hasError?: boolean
+  [key: string]: unknown
 }
+
+export type WorkflowNode = Node<WorkflowNodeData, 'workflowNode'>
 
 export interface SavedWorkflow {
   id: string
   name: string
-  nodes: unknown[]
-  edges: unknown[]
+  nodes: WorkflowNode[]
+  edges: Edge[]
   savedAt: string
 }
 

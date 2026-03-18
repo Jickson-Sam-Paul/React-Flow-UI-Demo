@@ -3,26 +3,25 @@ import {
   addEdge,
   applyNodeChanges,
   applyEdgeChanges,
-  type Node,
   type Edge,
   type Connection,
   type NodeChange,
   type EdgeChange,
 } from '@xyflow/react'
-import { WorkflowNodeData, SavedWorkflow } from '../types'
+import { WorkflowNodeData, SavedWorkflow, WorkflowNode } from '../types'
 
 interface WorkflowState {
-  nodes: Node<WorkflowNodeData>[]
+  nodes: WorkflowNode[]
   edges: Edge[]
   selectedNodeId: string | null
   isRunning: boolean
   workflowName: string
-  onNodesChange: (changes: NodeChange[]) => void
+  onNodesChange: (changes: NodeChange<WorkflowNode>[]) => void
   onEdgesChange: (changes: EdgeChange[]) => void
   onConnect: (connection: Connection) => void
   selectNode: (id: string | null) => void
   updateNodeConfig: (id: string, config: Partial<WorkflowNodeData>) => void
-  addNode: (node: Node<WorkflowNodeData>) => void
+  addNode: (node: WorkflowNode) => void
   deleteNode: (id: string) => void
   runWorkflow: () => Promise<void>
   saveWorkflow: () => void
@@ -42,7 +41,7 @@ export const useWorkflowStore = create<WorkflowState>((set, get) => ({
   workflowName: 'Untitled Workflow',
 
   onNodesChange: (changes) =>
-    set((state) => ({ nodes: applyNodeChanges(changes, state.nodes) as Node<WorkflowNodeData>[] })),
+    set((state) => ({ nodes: applyNodeChanges(changes, state.nodes) })),
 
   onEdgesChange: (changes) =>
     set((state) => ({ edges: applyEdgeChanges(changes, state.edges) })),
@@ -137,8 +136,8 @@ export const useWorkflowStore = create<WorkflowState>((set, get) => ({
 
   loadWorkflow: (workflow) => {
     set({
-      nodes: workflow.nodes as Node<WorkflowNodeData>[],
-      edges: workflow.edges as Edge[],
+      nodes: workflow.nodes,
+      edges: workflow.edges,
       workflowName: workflow.name,
       selectedNodeId: null,
     })
